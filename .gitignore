@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+cdm2026.tar.gz
+target/
+*.tar.gz
