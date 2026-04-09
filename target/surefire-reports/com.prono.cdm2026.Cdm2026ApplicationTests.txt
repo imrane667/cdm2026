@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.prono.cdm2026.Cdm2026ApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.546 s -- in com.prono.cdm2026.Cdm2026ApplicationTests
