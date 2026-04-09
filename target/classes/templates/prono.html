@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Prono Groupe</title>
+    <style>
+        body { background-color: #dce8f5; font-family: 'Segoe UI', sans-serif; }
+        .card { border: none; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .navbar { background: white; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+        select { border-radius: 10px !important; padding: 10px !important; }
+        .position-label { font-weight: 600; color: #2c3e50; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    </style>
+</head>
+<body>
+    
+    <nav class="navbar px-4 py-3">
+        <a href="/" class="fw-semibold text-secondary text-decoration-none">🏆 CDM 2026</a>
+        <a href="/scores" class="btn btn-sm btn-outline-secondary">Scores</a>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card p-4">
+                    <h2 class="text-center mb-4 fw-light" th:text="'Prono — Groupe ' + ${groupe.lettre}"></h2>
+                    <div th:if="${existingProno}" class="alert mb-3" style="background:#e8f5e9; border-radius:12px; padding:16px;">
+                        <p class="mb-1 fw-semibold">Ton prono actuel :</p>
+                        <p class="mb-0">🥇 <span th:text="${existingProno.equipe1er.nom}"></span></p>
+                        <p class="mb-0">🥈 <span th:text="${existingProno.equipe2eme.nom}"></span></p>
+                        <p class="mb-0">🥉 <span th:text="${existingProno.equipe3eme.nom}"></span></p>
+                        <p class="mb-0">4️⃣ <span th:text="${existingProno.equipe4eme.nom}"></span></p>
+                    </div>
+                    <form method="post" action="/prono">
+                        <input type="hidden" name="userId" th:value="${userId.id}">
+                        <input type="hidden" name="groupeId" th:value="${groupe.id}">
+
+                        <div class="mb-3">
+    <label class="position-label mb-1">🥇 1er</label>
+    <select name="equipe1erId" class="form-select">
+        <option value="" disabled selected>-- Choisir --</option>
+        <option th:each="e : ${equipe}" th:value="${e.id}" th:text="${e.nom}"></option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="position-label mb-1">🥈 2ème</label>
+    <select name="equipe2emeId" class="form-select">
+        <option value="" disabled selected>-- Choisir --</option>
+        <option th:each="e : ${equipe}" th:value="${e.id}" th:text="${e.nom}"></option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="position-label mb-1">🥉 3ème</label>
+    <select name="equipe3emeId" class="form-select">
+        <option value="" disabled selected>-- Choisir --</option>
+        <option th:each="e : ${equipe}" th:value="${e.id}" th:text="${e.nom}"></option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="position-label mb-1">4ème</label>
+    <select name="equipe4emeId" class="form-select">
+        <option value="" disabled selected>-- Choisir --</option>
+        <option th:each="e : ${equipe}" th:value="${e.id}" th:text="${e.nom}"></option>
+    </select>
+</div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Valider mon prono</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-muted mt-5 pb-3" style="font-size: 0.85rem;">
+        Site codé par Omrani Imrane 💻
+    </footer>
+    <script>
+        const selects = document.querySelectorAll('select');
+        
+        selects.forEach(select => {
+            select.addEventListener('change', () => {
+                const selectedValues = Array.from(selects).map(s => s.value);
+                
+                selects.forEach(s => {
+                    Array.from(s.options).forEach(option => {
+                        option.disabled = selectedValues.includes(option.value) && s.value !== option.value;
+                    });
+                });
+            });
+        });
+        </script>
+        <script>
+            document.querySelector('form').addEventListener('submit', function(e) {
+                const selects = document.querySelectorAll('select[name]');
+                let valid = true;
+                selects.forEach(s => {
+                    if (!s.value) valid = false;
+                });
+                if (!valid) {
+                    e.preventDefault();
+                    const alert = document.createElement('div');
+                    alert.style.cssText = 'background:#fce4e4; color:#c0392b; border-radius:12px; padding:14px; margin-bottom:16px; text-align:center; font-weight:600;';
+                    alert.textContent = '⚠️ Tu dois choisir une équipe pour chaque position !';
+                    const form = document.querySelector('form');
+                    const existing = document.getElementById('alert-msg');
+                    if (existing) existing.remove();
+                    alert.id = 'alert-msg';
+                    form.prepend(alert);
+                }
+            });
+            </script>
+</body>
+</html>
